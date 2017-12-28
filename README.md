@@ -10,3 +10,5 @@ There are several nodes:
 
 Each osd node consists of 2048Mb of RAM, 1 CPU and 3 virtual disks with 50Gb size
 
+Other nodes has 1024Mb of RAM and standart configuration
+
