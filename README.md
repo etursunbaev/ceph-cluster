@@ -17,5 +17,5 @@ Inspired by this articles:
 
 - https://habrahabr.ru/post/315646/ in russian
 - http://onreader.mdl.ru/MasteringCeph/content/Ch02.html#01 in russian
-- https://github.com/ceph/ceph-ansible
+- https://github.com/ceph/ceph-ansible This source is ready and could be realized easily, but want to build own cluster 
 
