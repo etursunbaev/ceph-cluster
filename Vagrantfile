@@ -1,18 +1,18 @@
 
 nodes = [
-  { :hostname => 'mon1', :ip => '192.168.1.41', :box => 'xenial64' },
-  { :hostname => 'mon2', :ip => '192.168.1.42', :box => 'xenial64' },
-  { :hostname => 'mon3', :ip => '192.168.1.43', :box => 'xenial64' },
-  { :hostname => 'osd1', :ip => '192.168.1.51', :box => 'xenial64', :ram => 2048, :osd => 'yes' },
-  { :hostname => 'osd2', :ip => '192.168.1.52', :box => 'xenial64', :ram => 2048, :osd => 'yes' },
-  { :hostname => 'osd3', :ip => '192.168.1.53', :box => 'xenial64', :ram => 2048, :osd => 'yes' },
-  { :hostname => 'control', :ip => '192.168.1.40', :box => 'xenial64', :control => 'yes'}
+  { :hostname => 'mon1', :ip => '192.168.1.41', :box => 'ubuntu-16.04' },
+  { :hostname => 'mon2', :ip => '192.168.1.42', :box => 'ubuntu-16.04' },
+  { :hostname => 'mon3', :ip => '192.168.1.43', :box => 'ubuntu-16.04' },
+  { :hostname => 'osd1', :ip => '192.168.1.51', :box => 'ubuntu-16.04', :ram => 2048, :osd => 'yes' },
+  { :hostname => 'osd2', :ip => '192.168.1.52', :box => 'ubuntu-16.04', :ram => 2048, :osd => 'yes' },
+  { :hostname => 'osd3', :ip => '192.168.1.53', :box => 'ubuntu-16.04', :ram => 2048, :osd => 'yes' },
+  { :hostname => 'control', :ip => '192.168.1.40', :box => 'ubuntu-16.04', :control => 'yes'}
 ]
  
 Vagrant.configure("2") do |config|
   nodes.each do |node|
     config.vm.define node[:hostname] do |nodeconfig|
-      nodeconfig.vm.box = "ajxb/ubuntu-xenial64"
+      nodeconfig.vm.box = "bento/ubuntu-16.04"
       nodeconfig.vm.hostname = node[:hostname]
       nodeconfig.vm.network :private_network, ip: node[:ip]
        nodeconfig.vm.network "public_network", 
