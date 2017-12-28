@@ -1,4 +1,3 @@
-
 nodes = [
   { :hostname => 'mon1', :ip => '192.168.1.41', :box => 'ubuntu-16.04' },
   { :hostname => 'mon2', :ip => '192.168.1.42', :box => 'ubuntu-16.04' },
@@ -32,13 +31,15 @@ Vagrant.configure("2") do |config|
           vb.customize [ "storageattach", :id, "--storagectl", "SATA Controller", "--port", 3, "--device", 0, "--type", "hdd", "--medium", "disk_sdd-#{node[:hostname]}.vdi" ]
         end
         config.vm.provision "ansible", playbook: "install-packages.yml"
-        config.ssh.username = "root"
+        config.ssh.username = "vagrant"
         config.ssh.password = "vagrant"
         config.ssh.insert_key = 'true'
+        if node[:control] == "yes"
+          config.vm.provision "shell", path: "bin/script.sh"
         end
       end
     end
     #config.hostmanager.enabled = true
     #config.hostmanager.manage_guest = true
-    end
+  end
 end
