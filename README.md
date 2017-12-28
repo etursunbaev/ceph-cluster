@@ -12,3 +12,10 @@ Each osd node consists of 2048Mb of RAM, 1 CPU and 3 virtual disks with 50Gb siz
 
 Other nodes has 1024Mb of RAM and standart configuration
 
+
+Inspired by this articles:
+
+- https://habrahabr.ru/post/315646/ in russian
+- http://onreader.mdl.ru/MasteringCeph/content/Ch02.html#01 in russian
+- https://github.com/ceph/ceph-ansible
+
