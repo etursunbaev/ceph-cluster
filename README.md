@@ -4,7 +4,7 @@ This is virtual test Ceph environment using Vagrant and Virtualbox.The main appr
 
 There are several nodes:
 
-1. Ansible node. 
+1. Control node. 
 2. Three ceph monitors
 3. Three osd nodes
 
