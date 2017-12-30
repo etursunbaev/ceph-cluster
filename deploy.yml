@@ -1,0 +1,9 @@
+---
+-hosts: osd1 osd2 osd3
+
+tasks:
+- name: Deploying Ceph-Cluster
+  raw: /home/vagrant/deploy.sh
+
+# Uncomment here. It is the same as raw and work than the raw
+#- script: /home/vagrant/deploy.sh
