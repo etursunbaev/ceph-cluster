@@ -2,16 +2,17 @@
 
 This is virtual test Ceph environment using Vagrant and Virtualbox.The main approach is to automate deploying ceph nodes with Ansible playbooks.
 
-There are several nodes:
-
-1. Control node. 
-2. Three ceph monitors
-3. Three osd nodes
+There are 3 osd nodes
 
 Each osd node consists of 2048Mb of RAM, 1 CPU and 3 virtual disks with 50Gb size
 
-Other nodes has 1024Mb of RAM and standart configuration
+## Directions
 
+1. run "vagrant up"
+2. after "vagrant up" enter to one osd node "vagrant ssh $node_name"
+3. in node generate ssh-key by "ssh-keygen"
+3. than distribute ssh-key to each node by "ssh-copy-id $node_name"
+4. than run playbook "ansible-playbook deploy.yml" or run script "deploy.sh" (playbooks are not ready and may not work)
 
 Inspired by this articles:
 
