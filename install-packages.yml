@@ -1,6 +1,6 @@
 ---
-- hosts: mon1 mon2 mon3 osd1 osd2 osd3
-  remote_user: vagrant
+- hosts: osd1 osd2 osd3
+  remote_user: root
   become: yes
   become_method: sudo
   gather_facts: no
@@ -14,11 +14,10 @@
     apt:
       name: ceph-deploy
       state: present
-#  - name: Insall SSHPASS
-#    apt:
-#      name: sshpass
-#      state: present
-#  - name : Making Directory
-#    file:
-#      path: "/etc/ceph"
-#      state: directory
+  - name: Install Ansible
+    apt:
+      name: ansible
+      state: present
+ # ansible should be installed only in 1 machine, but for tests I'll install to all nodes
+ # - name: Insert configurations
+  - script: ./configs.sh 
