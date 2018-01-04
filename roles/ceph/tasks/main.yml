@@ -1,0 +1,12 @@
+---
+- name: Copying hosts
+  remote_user: root
+  become: yes
+  become_method: sudo
+
+  copy:
+    src: etc/hosts
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644

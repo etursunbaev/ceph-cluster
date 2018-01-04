@@ -1,0 +1,31 @@
+---
+- name: Installation packages
+  hosts: osd1 osd2 osd3
+  remote_user: root
+  become: yes
+  become_method: sudo
+  gather_facts: False
+
+  tasks: 
+    - name: Installing NTP
+      apt:
+        name: ntp
+        state: present
+    - name: Installing NTPDATE
+      apt:
+        name: ntpdate
+        state: present
+#    - name: Installing sshpass
+#      apt:
+#        name: sshpass
+#        state: present
+#    - name: Installing Ceph-Deploy
+#      apt:
+#        name: ceph-deploy
+#        state: present
+
+- name: Installation
+  hosts: osd1 osd2 osd3
+  gather_facts: False
+  roles:
+    - ceph
