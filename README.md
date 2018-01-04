@@ -32,6 +32,7 @@ P.S.
 ceph-deploy osd create
 ` 
 shows an error, nevertheless ceph cluster works. Need to investigate and fix
+
 Inspired by this articles:
 
 - https://habrahabr.ru/post/315646/ in russian
