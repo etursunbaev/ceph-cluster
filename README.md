@@ -11,6 +11,7 @@ Each osd node consists of 4096Mb of RAM and 1 virtual disks with 200Gb size
 ## Preparetion
 
 - Set up Vagrantfile
+ 
      p.s. In physical environment prepare disks
 - Prepare hosts file with ip and hostname. It is necessary for ceph-deploy utility and ansible to get connection by hostname.
 - Generate SSH key and distribute it to each node. Ceph-deploy must login to node that has passwordless sudo privileges, because it needs to install software and configuration files without prompting for passwords. 
@@ -19,6 +20,7 @@ Each osd node consists of 4096Mb of RAM and 1 virtual disks with 200Gb size
 
 - On OSD nodes install NTP, NTPDATE (it is necessary for clock syncing between monitors daemon), TGTADM (Linux SCSI Target Administration Utility)
 - On admin node install sshpass, ceph-deploy utility 
+ 
     p.s. in physical environment also install ansible to run playbooks
 
 ## Directions
@@ -26,9 +28,9 @@ Each osd node consists of 4096Mb of RAM and 1 virtual disks with 200Gb size
 1. run "time vagrant up"
 
 P.S. 
-'''
+`
 ceph-deploy osd create
-''' 
+` 
 shows an error, nevertheless ceph cluster works. Need to investigate and fix
 Inspired by this articles:
 
