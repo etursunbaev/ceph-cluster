@@ -1,0 +1,17 @@
+---
+- name: Deploy OSD nodes
+  hosts: all
+  remote_user: root
+  become: true
+  become_method: sudo
+  gather_facts: False
+  roles:
+    - ceph
+- name: Deploy admin node
+  hosts: admin
+  remote_user: cephix
+  become: true
+  become_method: sudo
+  gather_facts: False
+  roles:
+    - admin

@@ -1,0 +1,68 @@
+---
+#ansible_python_interpreter: /usr/bin/python3
+- name: Adding deb source of Ceph and Installing ceph package
+  shell: | 
+    wget -q -O- 'https://download.ceph.com/keys/release.asc' | sudo apt-key add -
+    echo deb http://download.ceph.com/debian-luminous stretch main | tee -a /etc/apt/sources.list
+    echo "deb-src http://download.ceph.com/debian-luminous stretch main" | tee -a /etc/apt/sources.list
+    echo "deb http://172.16.0.1:3142/debian stretch main" | tee -a /etc/apt/sources.list
+    echo "deb-src http://172.16.0.1:3142/debian stretch main" | tee -a /etc/apt/sources.list
+    apt-get update
+    apt-get install -y ceph
+- name: Install python3-pip
+  shell: |
+    apt-get install -y python3-pip
+    pip3 install pexpect
+- name: Import pexpect
+  raw: python3 -c 'import pexpect'
+
+- name: Making ssh access in sshd_config
+  shell: |
+    sed -i "s/#Port 22/Port 22/g" /etc/ssh/sshd_config
+    sed -i "s/UseDNS no/#UseDNS no/g" /etc/ssh/sshd_config
+    sed -i "s/PasswordAuthentication no/#PasswordAuthentication no/g" /etc/ssh/sshd_config
+    sed -i "s/#PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
+- name: Generating ceph-user
+  shell: |
+    useradd -d /home/cephix -m cephix
+    passwd cephix
+    echo "cephix ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/cephix
+    chmod 0440 /etc/sudoers.d/cephix
+- name: Case insensitve password string match
+  expect:
+    command: passwd cephix
+    responses:
+      (?i)password: "vagrant"
+
+- name: Case insensitve password string match
+  expect:
+    command: passwd root
+    responses:
+      (?i)password: "vagrant"
+
+- name: Grant    
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^cephix ALL='
+    line: 'cephix ALL=(ALL) NOPASSWD: ALL'
+    validate: '/usr/sbin/visudo -cf %s'
+- name: Copying hosts template file
+  copy:
+    src: etc/hosts
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+
+# This just test this module
+#- name: Adding foobar line
+#  lineinfile:
+#    path: /etc/hosts
+#    line: '192.168.1.15 test'
+
+- name: Restarting ssh service
+  systemd:
+    name: ssh.service
+    state: restarted
+    enabled: yes

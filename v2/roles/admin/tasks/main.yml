@@ -1,0 +1,48 @@
+---
+- name: Install sshpass
+  apt:
+    name: sshpass
+    state: present
+- name: Install ceph-depoy utility
+  apt:
+    name: ceph-deploy
+    state: present
+#- name: Generating and publishing key
+#  shell: |
+#    ssh-keygen -f /home/cephix/.ssh/id_rsa
+#    cat /home/cephix/.ssh/id_rsa.pub >> /home/cephix/.ssh/authorized_keys
+#    chown -R cephix:users /home/cephix/.ssh
+#    for i in 2 3; do
+#      scp /home/cephix/.ssh/* cephix@mosd$i:/home/cephix/.ssh/
+#    done
+##  become: true
+#  become_user: cephix
+- name: Generating SSH keys
+  shell: sudo -u cephix ssh-keygen -b 2048 -t rsa -f /home/cephix/.ssh/id_rsa -q -N ""
+  args:
+    creates: /home/cephix/.ssh/id_rsa
+  become: true
+  become_user: vagrant
+- name: Copy pub key to OSD
+  shell: |
+    for i in 1 2 3; do
+      sshpass -p vagrant ssh-copy-id -i /home/cephix/.ssh/id_rsa.pub -o StrictHostKeyChecking=no cephix@mosd$i
+    done
+  become: true
+  become_user: cephix
+#- name: Installing Cluster
+#  raw: ceph-deploy install mosd1 mosd2 mosd3
+#  become: true
+#  become_user: root
+#  run_once: true 
+- name: Installing Ceph to each node
+  shell: |
+    cd /etc/ceph
+    ceph-deploy new mosd1 mosd2 mosd3
+    ceph-deploy --overwrite-conf mon create-initial
+    ceph-deploy disk zap {mosd1,mosd2,mosd3}:sdb
+    ceph-deploy osd create {mosd1,mosd2,mosd3}:sdb
+  args:
+    chdir: /etc/ceph
+  become: true
+  become_user: cephix

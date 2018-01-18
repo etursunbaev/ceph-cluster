@@ -1,0 +1,57 @@
+---
+- name: Configuration admin node and Ceph installation
+  hosts: all
+
+  #vars:
+  #  ssh_known_hosts_command: "ssh-keyscan -T 10"
+  #  ssh_known_hosts_file: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
+  #  ssh_known_hosts: "{{ groups['all'] }}"
+
+
+  tasks:
+  - name: Install sshpass
+    remote_user: root
+    become: true
+    become_method: sudo
+    apt:
+      name: sshpass
+      state: present
+  - name: Install ceph-depoy utility
+    remote_user: root
+    become: true
+    become_method: sudo
+    apt:
+      name: ceph-deploy
+      state: present
+
+  - name: Generate SSH keys
+    shell: ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa -q -N ""
+    args:
+      creates: /home/vagrant/.ssh/id_rsa
+
+  - name: Copy pub key to OSD1 
+    shell: "sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no vagrant@mosd1"
+  - name: Copy pub key to OSD2
+    shell: "sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no vagrant@mosd2"
+  - name: Copy pub key to OSD3
+    shell: "sshpass -p vagrant ssh-copy-id -o StrictHostKeyChecking=no vagrant@mosd3"
+
+- name: Installing Ceph
+  hosts: admin
+  gather_facts: False
+  tasks:
+    - name: Creating Cluster
+      raw: ceph-deploy install mosd1 mosd2 mosd3
+      run_once: true 
+    - name: Installing Ceph to each node
+      raw: ceph-deploy new mosd1 mosd2 mosd3
+      run_once: true
+    - name: Creating monitors
+      raw: ceph-deploy --overwrite-conf mon create-initial
+      run_once: true
+    - name: Preparing Disks
+      raw: ceph-deploy disk zap {osd1,osd2,osd3}:sdb
+      run_once: true
+    - name: Making disks OSD and activating
+      raw: ceph-deploy osd create {mosd1,mosd2,mosd3}:sdb
+      run_once: true
